@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>JakubOS — Jakub Duda</title>
+<style>
+:root{--bg:#07070f;--glass:rgba(20,22,38,.78);--line:rgba(255,255,255,.12);--tx:#e8eaf6;--mut:#8b90b0;--ac:#7c5cff;--ac2:#22d3ee;--ok:#4ade80;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font:14px/1.5 ui-monospace,"JetBrains Mono",Menlo,Consolas,monospace}
+#wall{position:fixed;inset:0;background:radial-gradient(60% 50% at 20% 20%,rgba(124,92,255,.35),transparent),radial-gradient(50% 50% at 85% 75%,rgba(34,211,238,.28),transparent),radial-gradient(40% 40% at 70% 15%,rgba(255,61,165,.15),transparent),var(--bg)}
+#wall::after{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:48px 48px;opacity:.25;mask-image:radial-gradient(circle,#000,transparent 80%)}
+#boot{position:fixed;inset:0;background:#000;z-index:100;padding:24px;color:var(--ok);white-space:pre-wrap;transition:opacity .6s}
+#icons{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));left:16px;display:grid;gap:10px;z-index:1}
+.ic{width:84px;text-align:center;cursor:pointer;padding:8px 4px;border-radius:12px;border:1px solid transparent;transition:.15s}
+.ic:hover,.ic:active{background:rgba(255,255,255,.08);border-color:var(--line);transform:translateY(-2px)}
+.ic i{display:block;font-style:normal;font-size:34px;filter:drop-shadow(0 4px 10px rgba(124,92,255,.6))}
+.ic span{font-size:12px;color:var(--tx)}
+.win{position:fixed;background:var(--glass);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid var(--line);border-radius:14px;box-shadow:0 30px 80px rgba(0,0,0,.6);display:flex;flex-direction:column;min-width:300px;animation:open .25s cubic-bezier(.2,1.4,.5,1);overflow:hidden}
+@keyframes open{from{opacity:0;transform:scale(.88) translateY(14px)}}
+.win.min{display:none}
+.tb{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line);cursor:grab;touch-action:none}
+.tb b{flex:1;text-align:center;font-weight:600;color:var(--mut);font-size:12px}
+.dot{width:13px;height:13px;border-radius:50%;border:0;padding:0;cursor:pointer}
+.dot.r{background:#ff5f57}.dot.y{background:#febc2e}.dot.g{background:#28c840}
+.bd{padding:16px;overflow:auto;flex:1}
+h3{margin:0 0 8px;font-size:18px;background:linear-gradient(90deg,var(--ac),var(--ac2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.card{display:block;color:var(--tx);text-decoration:none;border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;background:rgba(255,255,255,.03);transition:.2s}
+.card:hover{border-color:var(--ac);transform:translateX(4px);background:rgba(124,92,255,.1)}
+.card b{color:var(--ac2)}.card p{margin:4px 0 6px;color:var(--mut)}
+.tag{display:inline-block;font-size:11px;padding:1px 8px;border-radius:20px;border:1px solid var(--line);margin:2px 3px 0 0;color:var(--tx)}
+.sk{margin-bottom:10px}.sk div:first-child{display:flex;justify-content:space-between;font-size:12px}
+.br{height:6px;border-radius:6px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:3px}
+.br i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--ac),var(--ac2));transition:width 1.2s cubic-bezier(.2,1,.3,1)}
+.btn{display:inline-block;padding:8px 14px;border-radius:10px;background:linear-gradient(90deg,var(--ac),var(--ac2));color:#000;font-weight:700;text-decoration:none;margin:4px 6px 0 0}
+#term{height:100%;display:flex;flex-direction:column}
+#out{flex:1;overflow:auto;white-space:pre-wrap;word-break:break-word}
+#out a{color:var(--ac2)}
+.pr{display:flex;gap:8px}.pr span{color:var(--ok)}
+#in{flex:1;background:none;border:0;outline:0;color:var(--tx);font:inherit}
+.cmd{color:var(--ac2);cursor:pointer;text-decoration:underline dotted}
+#bar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom,0px));display:flex;gap:6px;align-items:center;padding:8px 12px;background:var(--glass);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid var(--line);border-radius:18px;z-index:50;max-width:calc(100% - 16px);overflow:auto}
+#bar button{border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--tx);border-radius:10px;padding:6px 10px;font:inherit;font-size:12px;cursor:pointer}
+#bar button.on{border-color:var(--ac);box-shadow:0 0 14px rgba(124,92,255,.5)}
+#clk{color:var(--mut);font-size:12px;padding:0 6px;white-space:nowrap}
+#stat{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));right:16px;padding:6px 12px;border:1px solid var(--line);border-radius:20px;background:var(--glass);font-size:12px;z-index:1}
+#stat::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok);margin-right:8px;box-shadow:0 0 10px var(--ok);animation:pl 1.5s infinite}
+@keyframes pl{50%{opacity:.3}}
+@media(max-width:700px){.win{left:8px!important;right:8px;top:calc(60px + env(safe-area-inset-top,0px))!important;bottom:76px;width:auto!important;height:auto!important}.tb{cursor:default}#icons{grid-template-columns:repeat(2,84px)}}
+</style>
+</head>
+<body>
+<div id="wall"></div>
+<div id="boot"></div>
+<div id="stat">Dostępny do zleceń freelance</div>
+<div id="icons"></div>
+<div id="bar"></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const P=[
+ ['Infinite Apparel','https://infiniteapparelwear.com','Sklep e-commerce ze Stripe, wdrożony i działający na żywo.','Node.js,Stripe,MongoDB,EJS'],
+ ['Typing Battle','https://github.com/harryszczupak/Typing-Battle','Wieloosobowy wyścig w pisaniu w czasie rzeczywistym.','Next.js,Socket.IO,Tailwind'],
+ ['AI Task Manager','https://github.com/harryszczupak/ai-task-manager','Menedżer zadań wspierany przez AI.','JavaScript'],
+ ['Medical Clinic API','https://github.com/harryszczupak/medical-clinic-api','Backendowe API dla przychodni medycznej.','Python'],
+ ['Auto Market','https://github.com/harryszczupak/auto-market','Aplikacja webowa rynku motoryzacyjnego.','TypeScript'],
+ ['Bankly','https://github.com/harryszczupak/bankly','Aplikacja bankowa.','TypeScript'],
+ ['Magazyn','https://github.com/harryszczupak/Magazyn_projekt','System magazynowy.','C++']];
+const S=[['TypeScript',85],['JavaScript',90],['React / Next.js',80],['Node.js',85],['MongoDB',75],['HTML / CSS',92],['Stripe',70],['Python / C++',60]];
+const tags=t=>t.split(',').map(x=>`<span class="tag">${x}</span>`).join('');
+const apps={
+ projects:{i:'📁',t:'projects/',w:520,h:480,html:()=>`<h3>Projekty</h3>`+P.map(p=>`<a class="card" href="${p[1]}" target="_blank" rel="noopener"><b>${p[0]}</b><p>${p[2]}</p>${tags(p[3])}</a>`).join('')},
+ skills:{i:'⚡',t:'skills.exe',w:420,h:450,html:()=>`<h3>Umiejętności</h3>`+S.map(s=>`<div class="sk"><div><span>${s[0]}</span><span>${s[1]}%</span></div><div class="br"><i data-w="${s[1]}"></i></div></div>`).join('')+`<p>Uczę się: ${tags('Jest,React Native,Next.js,Backend,DevOps')}</p>`,after:w=>setTimeout(()=>w.querySelectorAll('.br i').forEach(b=>b.style.width=b.dataset.w+'%'),100)},
+ about:{i:'👤',t:'about.md',w:440,h:380,html:()=>`<h3>Jakub Duda</h3><p>Student informatyki na Politechnice Krakowskiej, technik informatyk, freelancer fullstack.</p><p>Buduję nowoczesne aplikacje webowe od pomysłu po wdrożenie. Teraz zgłębiam zaawansowany backend i DevOps.</p>${tags('Computer Science,Freelancer,Fullstack,Kraków')}`},
+ contact:{i:'✉️',t:'contact.sh',w:380,h:300,html:()=>`<h3>Kontakt</h3><p>Masz projekt? Odezwij się.</p><a class="btn" href="mailto:jakubduda449@gmail.com">E-mail</a><a class="btn" href="https://github.com/harryszczupak" target="_blank" rel="noopener">GitHub</a><a class="btn" href="https://www.linkedin.com/in/jakub-duda-9b272b33a/" target="_blank" rel="noopener">LinkedIn</a>`},
+ terminal:{i:'⌨️',t:'terminal',w:560,h:420,html:()=>`<div id="term"><div id="out"></div><div class="pr"><span>guest@jakubos:~$</span><input id="in" autocomplete="off" spellcheck="false" autocapitalize="off"></div></div>`,after:termInit}
+};
+let z=10,wins={},n=0;
+function open(id){
+  if(wins[id]){wins[id].classList.remove('min');focus(id);return}
+  const a=apps[id],w=document.createElement('div');w.className='win';
+  const W=Math.min(a.w,innerWidth-16);
+  w.style.cssText=`width:${W}px;height:${a.h}px;left:${Math.max(8,110+n*34+Math.random()*60)}px;top:${70+n*30}px`;n=(n+1)%6;
+  w.innerHTML=`<div class="tb"><button class="dot r"></button><button class="dot y"></button><button class="dot g"></button><b>${a.t}</b></div><div class="bd">${a.html()}</div>`;
+  document.body.appendChild(w);wins[id]=w;
+  w.querySelector('.r').onclick=()=>{w.remove();delete wins[id];bar()};
+  w.querySelector('.y').onclick=()=>{w.classList.add('min');bar()};
+  w.querySelector('.g').onclick=()=>{const m=w.dataset.m;if(m){w.style.cssText=m;w.dataset.m=''}else{w.dataset.m=w.style.cssText;w.style.cssText='left:8px;top:8px;right:8px;bottom:76px;width:auto;height:auto'}};
+  w.onpointerdown=()=>focus(id);
+  drag(w,w.querySelector('.tb'));focus(id);a.after&&a.after(w);
+}
+function focus(id){wins[id].style.zIndex=++z;bar(id)}
+function drag(w,h){h.onpointerdown=e=>{if(e.target.closest('button')||innerWidth<=700)return;
+  const dx=e.clientX-w.offsetLeft,dy=e.clientY-w.offsetTop;h.setPointerCapture(e.pointerId);h.style.cursor='grabbing';
+  h.onpointermove=m=>{w.style.left=Math.max(0,m.clientX-dx)+'px';w.style.top=Math.max(0,m.clientY-dy)+'px'};
+  h.onpointerup=()=>{h.onpointermove=null;h.style.cursor=''}}}
+function bar(act){
+  $('#bar').innerHTML=Object.keys(apps).map(k=>`<button data-k="${k}" class="${wins[k]&&!wins[k].classList.contains('min')&&(act?act===k:1)&&wins[k].style.zIndex==z?'on':''}">${apps[k].i} ${k}</button>`).join('')+`<span id="clk"></span>`;
+  $('#bar').querySelectorAll('button').forEach(b=>b.onclick=()=>{const k=b.dataset.k;if(wins[k]&&!wins[k].classList.contains('min')&&wins[k].style.zIndex==z){wins[k].classList.add('min');bar()}else open(k)});tick()}
+function tick(){const c=$('#clk');if(c)c.textContent=new Date().toLocaleTimeString('pl-PL',{hour:'2-digit',minute:'2-digit'})}
+setInterval(tick,10000);
+$('#icons').innerHTML=Object.keys(apps).map(k=>`<div class="ic" data-k="${k}"><i>${apps[k].i}</i><span>${apps[k].t}</span></div>`).join('');
+document.querySelectorAll('.ic').forEach(e=>e.onclick=()=>open(e.dataset.k));
+
+// ---- Terminal ----
+function termInit(w){
+  const out=w.querySelector('#out'),inp=w.querySelector('#in'),hist=[];let hi=0;
+  const say=t=>{out.innerHTML+=t+'\n';out.scrollTop=out.scrollHeight};
+  const C=c=>`<span class="cmd" data-c="${c}">${c}</span>`;
+  const cmds={
+   help:()=>say(`Dostępne komendy:\n  ${C('whoami')}  ${C('ls')}  ${C('skills')}  ${C('contact')}  ${C('neofetch')}\n  open &lt;projects|skills|about|contact&gt;\n  ${C('sudo hire jakub')}  ${C('clear')}`),
+   whoami:()=>say('Jakub Duda — fullstack developer, student informatyki, freelancer.'),
+   ls:()=>say(P.map(p=>`📁 ${p[0].toLowerCase().replace(/ /g,'-')}`).join('\n')),
+   skills:()=>say(S.map(s=>s[0].padEnd(22)+'█'.repeat(s[1]/5)+' '+s[1]+'%').join('\n')),
+   contact:()=>say('✉ <a href="mailto:jakubduda449@gmail.com">jakubduda449@gmail.com</a>\n⌥ <a href="https://github.com/harryszczupak" target="_blank">github.com/harryszczupak</a>'),
+   neofetch:()=>say(`<span style="color:var(--ac)">jakub</span>@<span style="color:var(--ac2)">jakubos</span>\n-----------\nOS: JakubOS 1.0 (przeglądarka)\nUczelnia: Politechnika Krakowska\nStack: TS, Node, React, Mongo\nStatus: gotowy do zleceń ✔`),
+   clear:()=>{out.innerHTML=''},
+   'sudo hire jakub':()=>say('[sudo] autoryzacja... <span style="color:var(--ok)">OK</span>\nGratulacje! Najlepsza decyzja dnia. Napisz: <a href="mailto:jakubduda449@gmail.com">jakubduda449@gmail.com</a> 🚀')
+  };
+  function run(v){say(`<span style="color:var(--ok)">guest@jakubos:~$</span> ${v}`);
+   const c=v.trim().toLowerCase();if(!c)return;
+   if(c.startsWith('open')){const a=c.split(/\s+/)[1];if(apps[a]&&a!=='terminal'){say('Otwieram '+a+'...');open(a)}else say('Użycie: open projects|skills|about|contact');return}
+   if(c.startsWith('sudo')&&c!=='sudo hire jakub'){say('Nice try 😏');return}
+   (cmds[c]||(()=>say(`command not found: ${c}. Wpisz help`)))()}
+  inp.onkeydown=e=>{if(e.key==='Enter'){hist.push(inp.value);hi=hist.length;run(inp.value);inp.value=''}
+   else if(e.key==='ArrowUp'&&hi>0){inp.value=hist[--hi]}else if(e.key==='ArrowDown'&&hi<hist.length-1){inp.value=hist[++hi]}else if(e.key==='ArrowDown'){hi=hist.length;inp.value=''}};
+  out.onclick=e=>{const c=e.target.dataset.c;if(c)run(c)};
+  w.querySelector('.bd').onclick=e=>{if(!e.target.closest('a,.cmd'))inp.focus()};
+  say('<b style="color:var(--ac2)">JakubOS v1.0</b> — witaj! Wpisz '+C('help')+' lub kliknij komendę.\n');
+}
+
+// ---- Boot ----
+const L=['[ OK ] Ładowanie jądra...','[ OK ] Montowanie /projects','[ OK ] Uruchamianie Node.js, React, Stripe...','[ OK ] Łączenie z github.com/harryszczupak','[ OK ] Gotowe. Witaj, Jakub.'];
+const b=$('#boot');let i=0;
+const t=setInterval(()=>{b.textContent+=L[i++]+'\n';if(i===L.length){clearInterval(t);setTimeout(()=>{b.style.opacity=0;setTimeout(()=>b.remove(),600);open('terminal');if(innerWidth>700)open('about')},400)}},260);
+bar();
+</script>
+</body>
+</html>
