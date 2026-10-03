@@ -3,139 +3,146 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>JakubOS — Jakub Duda</title>
+<title>Jakub Duda — Dashboard</title>
 <style>
-:root{--bg:#07070f;--glass:rgba(20,22,38,.78);--line:rgba(255,255,255,.12);--tx:#e8eaf6;--mut:#8b90b0;--ac:#7c5cff;--ac2:#22d3ee;--ok:#4ade80;
+:root{--bg:#09090b;--pn:#111114;--pn2:#18181c;--ln:#27272d;--tx:#fafafa;--mu:#a1a1aa;--ac:#8b7bff;--ac2:#34d399;--wr:#fbbf24;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+:root[data-theme="light"]{--bg:#f6f6f8;--pn:#fff;--pn2:#f0f0f4;--ln:#e2e2e8;--tx:#111114;--mu:#5f5f6b;--ac:#5b47f5;--ac2:#059669}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f6f6f8;--pn:#fff;--pn2:#f0f0f4;--ln:#e2e2e8;--tx:#111114;--mu:#5f5f6b;--ac:#5b47f5;--ac2:#059669}}
+html{scroll-behavior:smooth;scroll-padding-top:calc(70px + env(safe-area-inset-top,0px))}
 *{box-sizing:border-box}
-body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font:14px/1.5 ui-monospace,"JetBrains Mono",Menlo,Consolas,monospace}
-#wall{position:fixed;inset:0;background:radial-gradient(60% 50% at 20% 20%,rgba(124,92,255,.35),transparent),radial-gradient(50% 50% at 85% 75%,rgba(34,211,238,.28),transparent),radial-gradient(40% 40% at 70% 15%,rgba(255,61,165,.15),transparent),var(--bg)}
-#wall::after{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:48px 48px;opacity:.25;mask-image:radial-gradient(circle,#000,transparent 80%)}
-#boot{position:fixed;inset:0;background:#000;z-index:100;padding:24px;color:var(--ok);white-space:pre-wrap;transition:opacity .6s}
-#icons{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));left:16px;display:grid;gap:10px;z-index:1}
-.ic{width:84px;text-align:center;cursor:pointer;padding:8px 4px;border-radius:12px;border:1px solid transparent;transition:.15s}
-.ic:hover,.ic:active{background:rgba(255,255,255,.08);border-color:var(--line);transform:translateY(-2px)}
-.ic i{display:block;font-style:normal;font-size:34px;filter:drop-shadow(0 4px 10px rgba(124,92,255,.6))}
-.ic span{font-size:12px;color:var(--tx)}
-.win{position:fixed;background:var(--glass);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid var(--line);border-radius:14px;box-shadow:0 30px 80px rgba(0,0,0,.6);display:flex;flex-direction:column;min-width:300px;animation:open .25s cubic-bezier(.2,1.4,.5,1);overflow:hidden}
-@keyframes open{from{opacity:0;transform:scale(.88) translateY(14px)}}
-.win.min{display:none}
-.tb{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line);cursor:grab;touch-action:none}
-.tb b{flex:1;text-align:center;font-weight:600;color:var(--mut);font-size:12px}
-.dot{width:13px;height:13px;border-radius:50%;border:0;padding:0;cursor:pointer}
-.dot.r{background:#ff5f57}.dot.y{background:#febc2e}.dot.g{background:#28c840}
-.bd{padding:16px;overflow:auto;flex:1}
-h3{margin:0 0 8px;font-size:18px;background:linear-gradient(90deg,var(--ac),var(--ac2));-webkit-background-clip:text;background-clip:text;color:transparent}
-.card{display:block;color:var(--tx);text-decoration:none;border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;background:rgba(255,255,255,.03);transition:.2s}
-.card:hover{border-color:var(--ac);transform:translateX(4px);background:rgba(124,92,255,.1)}
-.card b{color:var(--ac2)}.card p{margin:4px 0 6px;color:var(--mut)}
-.tag{display:inline-block;font-size:11px;padding:1px 8px;border-radius:20px;border:1px solid var(--line);margin:2px 3px 0 0;color:var(--tx)}
-.sk{margin-bottom:10px}.sk div:first-child{display:flex;justify-content:space-between;font-size:12px}
-.br{height:6px;border-radius:6px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:3px}
-.br i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--ac),var(--ac2));transition:width 1.2s cubic-bezier(.2,1,.3,1)}
-.btn{display:inline-block;padding:8px 14px;border-radius:10px;background:linear-gradient(90deg,var(--ac),var(--ac2));color:#000;font-weight:700;text-decoration:none;margin:4px 6px 0 0}
-#term{height:100%;display:flex;flex-direction:column}
-#out{flex:1;overflow:auto;white-space:pre-wrap;word-break:break-word}
-#out a{color:var(--ac2)}
-.pr{display:flex;gap:8px}.pr span{color:var(--ok)}
-#in{flex:1;background:none;border:0;outline:0;color:var(--tx);font:inherit}
-.cmd{color:var(--ac2);cursor:pointer;text-decoration:underline dotted}
-#bar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom,0px));display:flex;gap:6px;align-items:center;padding:8px 12px;background:var(--glass);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1px solid var(--line);border-radius:18px;z-index:50;max-width:calc(100% - 16px);overflow:auto}
-#bar button{border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--tx);border-radius:10px;padding:6px 10px;font:inherit;font-size:12px;cursor:pointer}
-#bar button.on{border-color:var(--ac);box-shadow:0 0 14px rgba(124,92,255,.5)}
-#clk{color:var(--mut);font-size:12px;padding:0 6px;white-space:nowrap}
-#stat{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));right:16px;padding:6px 12px;border:1px solid var(--line);border-radius:20px;background:var(--glass);font-size:12px;z-index:1}
-#stat::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok);margin-right:8px;box-shadow:0 0 10px var(--ok);animation:pl 1.5s infinite}
-@keyframes pl{50%{opacity:.3}}
-@media(max-width:700px){.win{left:8px!important;right:8px;top:calc(60px + env(safe-area-inset-top,0px))!important;bottom:76px;width:auto!important;height:auto!important}.tb{cursor:default}#icons{grid-template-columns:repeat(2,84px)}}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.55 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(600px 300px at 80% -5%,color-mix(in srgb,var(--ac) 22%,transparent),transparent),radial-gradient(500px 300px at 0% 40%,color-mix(in srgb,var(--ac2) 10%,transparent),transparent);pointer-events:none}
+nav{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:6px;padding:12px 20px;background:color-mix(in srgb,var(--bg) 80%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--ln);overflow-x:auto}
+nav .lg{font-weight:700;margin-right:auto;white-space:nowrap}
+nav a{color:var(--mu);text-decoration:none;padding:6px 12px;border-radius:8px;font-size:14px;white-space:nowrap;transition:.2s}
+nav a:hover,nav a.on{color:var(--tx);background:var(--pn2)}
+#th{border:1px solid var(--ln);background:var(--pn);color:var(--tx);border-radius:8px;padding:6px 10px;cursor:pointer}
+main{position:relative;max-width:1080px;margin:0 auto;padding:28px 20px 80px}
+section{margin-bottom:56px}
+h2{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu);margin:0 0 16px;font-weight:600}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:5px 12px;border:1px solid var(--ln);border-radius:99px;background:var(--pn);font-size:13px;color:var(--mu)}
+.pill i{width:8px;height:8px;border-radius:50%;background:var(--ac2);box-shadow:0 0 0 0 var(--ac2);animation:pu 2s infinite}
+@keyframes pu{70%{box-shadow:0 0 0 8px transparent}}
+h1{font-size:clamp(38px,8vw,76px);line-height:1.02;margin:18px 0 14px;letter-spacing:-.03em}
+h1 span{background:linear-gradient(90deg,var(--ac),var(--ac2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{max-width:600px;color:var(--mu);font-size:18px;min-height:56px}
+.cur{display:inline-block;width:2px;height:1em;background:var(--ac);vertical-align:-2px;animation:bl 1s steps(2) infinite}
+@keyframes bl{50%{opacity:0}}
+.btns{margin-top:22px;display:flex;gap:10px;flex-wrap:wrap}
+.b{padding:10px 18px;border-radius:10px;text-decoration:none;font-weight:600;font-size:14px;border:1px solid var(--ln);color:var(--tx);background:var(--pn);transition:.2s}
+.b.p{background:var(--tx);color:var(--bg);border-color:var(--tx)}.b:hover{transform:translateY(-2px)}
+.grid{display:grid;gap:14px}.g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}.g3{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}.g2{grid-template-columns:repeat(auto-fit,minmax(380px,1fr))}
+.card{position:relative;background:var(--pn);border:1px solid var(--ln);border-radius:14px;padding:18px;overflow:hidden;transition:border-color .2s,transform .2s}
+.card::after{content:"";position:absolute;inset:0;background:radial-gradient(260px circle at var(--x,50%) var(--y,50%),color-mix(in srgb,var(--ac) 16%,transparent),transparent 70%);opacity:0;transition:.25s;pointer-events:none}
+.card:hover{border-color:color-mix(in srgb,var(--ac) 60%,var(--ln))}.card:hover::after{opacity:1}
+.stat b{display:block;font-size:34px;letter-spacing:-.02em}.stat span{color:var(--mu);font-size:13px}
+a.card{color:inherit;text-decoration:none;display:block}a.card:hover{transform:translateY(-3px)}
+.ph{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.ph b{font-size:17px}
+.st{font-size:11px;padding:2px 9px;border-radius:99px;border:1px solid var(--ln);color:var(--mu)}
+.st.live{color:var(--ac2);border-color:color-mix(in srgb,var(--ac2) 50%,transparent)}
+.card p{color:var(--mu);margin:4px 0 12px;font-size:14px}
+.tg span{display:inline-block;font-size:12px;padding:2px 9px;border-radius:6px;background:var(--pn2);margin:0 4px 4px 0}
+#hm{display:grid;grid-template-columns:repeat(26,1fr);gap:4px}
+#hm i{aspect-ratio:1;border-radius:3px;background:var(--pn2);opacity:0;animation:fi .4s forwards}
+@keyframes fi{to{opacity:1}}
+svg{width:100%;height:auto;display:block}
+.ln{fill:none;stroke:var(--ac);stroke-width:2.5;stroke-dasharray:1200;stroke-dashoffset:1200;transition:stroke-dashoffset 2s ease}
+.vis .ln{stroke-dashoffset:0}
+.sk{margin-bottom:12px}.sk div:first-child{display:flex;justify-content:space-between;font-size:13px}
+.br{height:6px;border-radius:6px;background:var(--pn2);margin-top:5px;overflow:hidden}
+.br i{display:block;height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,var(--ac),var(--ac2));transition:width 1.3s cubic-bezier(.2,1,.3,1)}
+.grp{margin-top:16px}.grp small{display:block;color:var(--mu);font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;margin:0 6px 6px 0;border:1px solid var(--ln);border-radius:99px;background:var(--pn2);font-size:13px;opacity:0;transform:scale(.85);transition:opacity .4s var(--d),transform .5s cubic-bezier(.3,1.5,.5,1) var(--d),border-color .2s,box-shadow .2s}
+.chip::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--c)}
+.vis .chip{opacity:1;transform:none}
+.vis .chip:hover{transform:translateY(-3px);border-color:var(--c);box-shadow:0 6px 18px color-mix(in srgb,var(--c) 30%,transparent);transition-delay:0s}
+#log{font:12.5px/1.7 ui-monospace,Menlo,Consolas,monospace;height:210px;overflow:hidden;color:var(--mu)}
+#log div{animation:fi .3s}#log .ok{color:var(--ac2)}#log .in{color:var(--ac)}
+.rv{opacity:0;transform:translateY(24px);transition:.7s cubic-bezier(.2,.8,.2,1)}.rv.vis{opacity:1;transform:none}
+footer{text-align:center;color:var(--mu);font-size:13px}
+@media(max-width:480px){.g2{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<div id="wall"></div>
-<div id="boot"></div>
-<div id="stat">Dostępny do zleceń freelance</div>
-<div id="icons"></div>
-<div id="bar"></div>
+<nav>
+  <span class="lg">▲ jakub.duda</span>
+  <a href="#home" class="on">Przegląd</a><a href="#projects">Projekty</a><a href="#activity">Aktywność</a><a href="#stack">Stack</a><a href="#contact">Kontakt</a>
+  <button id="th" aria-label="Motyw">◐</button>
+</nav>
+<main>
+<section id="home" class="rv">
+  <span class="pill"><i></i>Open for freelance: ONLINE</span>
+  <h1>Jakub Duda.<br><span>Fullstack, od pomysłu po deploy.</span></h1>
+  <div class="lead"><span id="ty"></span><span class="cur"></span></div>
+  <div class="btns"><a class="b p" href="#projects">Zobacz projekty</a><a class="b" href="mailto:jakubduda449@gmail.com">Napisz do mnie</a><a class="b" href="https://github.com/harryszczupak" target="_blank" rel="noopener">GitHub ↗</a></div>
+  <div class="grid g4" style="margin-top:36px">
+    <div class="card stat"><b data-n="20">0</b><span>repozytoriów na GitHubie</span></div>
+    <div class="card stat"><b data-n="7">0</b><span>projektów w portfolio</span></div>
+    <div class="card stat"><b data-n="9">0</b><span>technologii w użyciu</span></div>
+    <div class="card stat"><b data-n="1">0</b><span>sklep działający na produkcji</span></div>
+  </div>
+</section>
 
+<section id="projects" class="rv"><h2>Projekty</h2><div class="grid g3" id="pj"></div></section>
+
+<section id="activity" class="rv"><h2>Aktywność</h2><div class="grid g2">
+  <div class="card"><div class="ph"><b>Heatmapa commitów</b><span class="st">demo</span></div><div id="hm"></div></div>
+  <div class="card" id="ch"><div class="ph"><b>Commity / miesiąc</b><span class="st">demo</span></div>
+    <svg viewBox="0 0 400 150"><path class="ln" d="M0 110 C40 100 60 60 100 70 S160 120 200 80 S270 20 310 45 S370 30 400 15"/></svg></div>
+  <div class="card" style="grid-column:1/-1"><div class="ph"><b>Build log</b><span class="st live">live</span></div><div id="log"></div></div>
+</div></section>
+
+<section id="stack" class="rv"><h2>Stack i nauka</h2><div class="grid g2">
+  <div class="card" id="sk"></div>
+  <div class="card"><b>Aktualnie się uczę</b><p>Student informatyki na Politechnice Krakowskiej, technik informatyk, freelancer. Rozwijam backend i DevOps.</p>
+  <div class="tg"><span>Jest</span><span>React Native</span><span>Next.js</span><span>Backend</span><span>DevOps</span></div></div>
+</div></section>
+
+<section id="contact" class="rv"><h2>Kontakt</h2>
+  <div class="card"><b style="font-size:22px">Masz projekt? Zbudujmy go.</b><p>Odpowiadam szybko — napisz maila albo znajdź mnie w sieci.</p>
+  <div class="btns"><a class="b p" href="mailto:jakubduda449@gmail.com">jakubduda449@gmail.com</a><a class="b" href="https://www.linkedin.com/in/jakub-duda-9b272b33a/" target="_blank" rel="noopener">LinkedIn ↗</a><a class="b" href="https://github.com/harryszczupak" target="_blank" rel="noopener">GitHub ↗</a></div></div>
+</section>
+<footer>© 2026 Jakub Duda · zbudowane ręcznie w HTML, CSS i JS</footer>
+</main>
 <script>
-const $=s=>document.querySelector(s);
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const P=[
- ['Infinite Apparel','https://infiniteapparelwear.com','Sklep e-commerce ze Stripe, wdrożony i działający na żywo.','Node.js,Stripe,MongoDB,EJS'],
- ['Typing Battle','https://github.com/harryszczupak/Typing-Battle','Wieloosobowy wyścig w pisaniu w czasie rzeczywistym.','Next.js,Socket.IO,Tailwind'],
- ['AI Task Manager','https://github.com/harryszczupak/ai-task-manager','Menedżer zadań wspierany przez AI.','JavaScript'],
- ['Medical Clinic API','https://github.com/harryszczupak/medical-clinic-api','Backendowe API dla przychodni medycznej.','Python'],
- ['Auto Market','https://github.com/harryszczupak/auto-market','Aplikacja webowa rynku motoryzacyjnego.','TypeScript'],
- ['Bankly','https://github.com/harryszczupak/bankly','Aplikacja bankowa.','TypeScript'],
- ['Magazyn','https://github.com/harryszczupak/Magazyn_projekt','System magazynowy.','C++']];
-const S=[['TypeScript',85],['JavaScript',90],['React / Next.js',80],['Node.js',85],['MongoDB',75],['HTML / CSS',92],['Stripe',70],['Python / C++',60]];
-const tags=t=>t.split(',').map(x=>`<span class="tag">${x}</span>`).join('');
-const apps={
- projects:{i:'📁',t:'projects/',w:520,h:480,html:()=>`<h3>Projekty</h3>`+P.map(p=>`<a class="card" href="${p[1]}" target="_blank" rel="noopener"><b>${p[0]}</b><p>${p[2]}</p>${tags(p[3])}</a>`).join('')},
- skills:{i:'⚡',t:'skills.exe',w:420,h:450,html:()=>`<h3>Umiejętności</h3>`+S.map(s=>`<div class="sk"><div><span>${s[0]}</span><span>${s[1]}%</span></div><div class="br"><i data-w="${s[1]}"></i></div></div>`).join('')+`<p>Uczę się: ${tags('Jest,React Native,Next.js,Backend,DevOps')}</p>`,after:w=>setTimeout(()=>w.querySelectorAll('.br i').forEach(b=>b.style.width=b.dataset.w+'%'),100)},
- about:{i:'👤',t:'about.md',w:440,h:380,html:()=>`<h3>Jakub Duda</h3><p>Student informatyki na Politechnice Krakowskiej, technik informatyk, freelancer fullstack.</p><p>Buduję nowoczesne aplikacje webowe od pomysłu po wdrożenie. Teraz zgłębiam zaawansowany backend i DevOps.</p>${tags('Computer Science,Freelancer,Fullstack,Kraków')}`},
- contact:{i:'✉️',t:'contact.sh',w:380,h:300,html:()=>`<h3>Kontakt</h3><p>Masz projekt? Odezwij się.</p><a class="btn" href="mailto:jakubduda449@gmail.com">E-mail</a><a class="btn" href="https://github.com/harryszczupak" target="_blank" rel="noopener">GitHub</a><a class="btn" href="https://www.linkedin.com/in/jakub-duda-9b272b33a/" target="_blank" rel="noopener">LinkedIn</a>`},
- terminal:{i:'⌨️',t:'terminal',w:560,h:420,html:()=>`<div id="term"><div id="out"></div><div class="pr"><span>guest@jakubos:~$</span><input id="in" autocomplete="off" spellcheck="false" autocapitalize="off"></div></div>`,after:termInit}
-};
-let z=10,wins={},n=0;
-function open(id){
-  if(wins[id]){wins[id].classList.remove('min');focus(id);return}
-  const a=apps[id],w=document.createElement('div');w.className='win';
-  const W=Math.min(a.w,innerWidth-16);
-  w.style.cssText=`width:${W}px;height:${a.h}px;left:${Math.max(8,110+n*34+Math.random()*60)}px;top:${70+n*30}px`;n=(n+1)%6;
-  w.innerHTML=`<div class="tb"><button class="dot r"></button><button class="dot y"></button><button class="dot g"></button><b>${a.t}</b></div><div class="bd">${a.html()}</div>`;
-  document.body.appendChild(w);wins[id]=w;
-  w.querySelector('.r').onclick=()=>{w.remove();delete wins[id];bar()};
-  w.querySelector('.y').onclick=()=>{w.classList.add('min');bar()};
-  w.querySelector('.g').onclick=()=>{const m=w.dataset.m;if(m){w.style.cssText=m;w.dataset.m=''}else{w.dataset.m=w.style.cssText;w.style.cssText='left:8px;top:8px;right:8px;bottom:76px;width:auto;height:auto'}};
-  w.onpointerdown=()=>focus(id);
-  drag(w,w.querySelector('.tb'));focus(id);a.after&&a.after(w);
-}
-function focus(id){wins[id].style.zIndex=++z;bar(id)}
-function drag(w,h){h.onpointerdown=e=>{if(e.target.closest('button')||innerWidth<=700)return;
-  const dx=e.clientX-w.offsetLeft,dy=e.clientY-w.offsetTop;h.setPointerCapture(e.pointerId);h.style.cursor='grabbing';
-  h.onpointermove=m=>{w.style.left=Math.max(0,m.clientX-dx)+'px';w.style.top=Math.max(0,m.clientY-dy)+'px'};
-  h.onpointerup=()=>{h.onpointermove=null;h.style.cursor=''}}}
-function bar(act){
-  $('#bar').innerHTML=Object.keys(apps).map(k=>`<button data-k="${k}" class="${wins[k]&&!wins[k].classList.contains('min')&&(act?act===k:1)&&wins[k].style.zIndex==z?'on':''}">${apps[k].i} ${k}</button>`).join('')+`<span id="clk"></span>`;
-  $('#bar').querySelectorAll('button').forEach(b=>b.onclick=()=>{const k=b.dataset.k;if(wins[k]&&!wins[k].classList.contains('min')&&wins[k].style.zIndex==z){wins[k].classList.add('min');bar()}else open(k)});tick()}
-function tick(){const c=$('#clk');if(c)c.textContent=new Date().toLocaleTimeString('pl-PL',{hour:'2-digit',minute:'2-digit'})}
-setInterval(tick,10000);
-$('#icons').innerHTML=Object.keys(apps).map(k=>`<div class="ic" data-k="${k}"><i>${apps[k].i}</i><span>${apps[k].t}</span></div>`).join('');
-document.querySelectorAll('.ic').forEach(e=>e.onclick=()=>open(e.dataset.k));
-
-// ---- Terminal ----
-function termInit(w){
-  const out=w.querySelector('#out'),inp=w.querySelector('#in'),hist=[];let hi=0;
-  const say=t=>{out.innerHTML+=t+'\n';out.scrollTop=out.scrollHeight};
-  const C=c=>`<span class="cmd" data-c="${c}">${c}</span>`;
-  const cmds={
-   help:()=>say(`Dostępne komendy:\n  ${C('whoami')}  ${C('ls')}  ${C('skills')}  ${C('contact')}  ${C('neofetch')}\n  open &lt;projects|skills|about|contact&gt;\n  ${C('sudo hire jakub')}  ${C('clear')}`),
-   whoami:()=>say('Jakub Duda — fullstack developer, student informatyki, freelancer.'),
-   ls:()=>say(P.map(p=>`📁 ${p[0].toLowerCase().replace(/ /g,'-')}`).join('\n')),
-   skills:()=>say(S.map(s=>s[0].padEnd(22)+'█'.repeat(s[1]/5)+' '+s[1]+'%').join('\n')),
-   contact:()=>say('✉ <a href="mailto:jakubduda449@gmail.com">jakubduda449@gmail.com</a>\n⌥ <a href="https://github.com/harryszczupak" target="_blank">github.com/harryszczupak</a>'),
-   neofetch:()=>say(`<span style="color:var(--ac)">jakub</span>@<span style="color:var(--ac2)">jakubos</span>\n-----------\nOS: JakubOS 1.0 (przeglądarka)\nUczelnia: Politechnika Krakowska\nStack: TS, Node, React, Mongo\nStatus: gotowy do zleceń ✔`),
-   clear:()=>{out.innerHTML=''},
-   'sudo hire jakub':()=>say('[sudo] autoryzacja... <span style="color:var(--ok)">OK</span>\nGratulacje! Najlepsza decyzja dnia. Napisz: <a href="mailto:jakubduda449@gmail.com">jakubduda449@gmail.com</a> 🚀')
-  };
-  function run(v){say(`<span style="color:var(--ok)">guest@jakubos:~$</span> ${v}`);
-   const c=v.trim().toLowerCase();if(!c)return;
-   if(c.startsWith('open')){const a=c.split(/\s+/)[1];if(apps[a]&&a!=='terminal'){say('Otwieram '+a+'...');open(a)}else say('Użycie: open projects|skills|about|contact');return}
-   if(c.startsWith('sudo')&&c!=='sudo hire jakub'){say('Nice try 😏');return}
-   (cmds[c]||(()=>say(`command not found: ${c}. Wpisz help`)))()}
-  inp.onkeydown=e=>{if(e.key==='Enter'){hist.push(inp.value);hi=hist.length;run(inp.value);inp.value=''}
-   else if(e.key==='ArrowUp'&&hi>0){inp.value=hist[--hi]}else if(e.key==='ArrowDown'&&hi<hist.length-1){inp.value=hist[++hi]}else if(e.key==='ArrowDown'){hi=hist.length;inp.value=''}};
-  out.onclick=e=>{const c=e.target.dataset.c;if(c)run(c)};
-  w.querySelector('.bd').onclick=e=>{if(!e.target.closest('a,.cmd'))inp.focus()};
-  say('<b style="color:var(--ac2)">JakubOS v1.0</b> — witaj! Wpisz '+C('help')+' lub kliknij komendę.\n');
-}
-
-// ---- Boot ----
-const L=['[ OK ] Ładowanie jądra...','[ OK ] Montowanie /projects','[ OK ] Uruchamianie Node.js, React, Stripe...','[ OK ] Łączenie z github.com/harryszczupak','[ OK ] Gotowe. Witaj, Jakub.'];
-const b=$('#boot');let i=0;
-const t=setInterval(()=>{b.textContent+=L[i++]+'\n';if(i===L.length){clearInterval(t);setTimeout(()=>{b.style.opacity=0;setTimeout(()=>b.remove(),600);open('terminal');if(innerWidth>700)open('about')},400)}},260);
-bar();
+['Infinite Apparel','https://infiniteapparelwear.com','Sklep e-commerce od zera: płatności, produkty, użytkownicy. Działa na żywo.','Node.js,Stripe,MongoDB,EJS','live'],
+['Typing Battle','https://github.com/harryszczupak/Typing-Battle','Wieloosobowy wyścig w pisaniu z rundami i statystykami na żywo.','Next.js,Socket.IO,Tailwind','repo'],
+['AI Task Manager','https://github.com/harryszczupak/ai-task-manager','Menedżer zadań wspierany przez AI.','JavaScript','repo'],
+['Medical Clinic API','https://github.com/harryszczupak/medical-clinic-api','Backendowe API dla przychodni medycznej.','Python','repo'],
+['Auto Market','https://github.com/harryszczupak/auto-market','Aplikacja webowa rynku motoryzacyjnego.','TypeScript','repo'],
+['Bankly','https://github.com/harryszczupak/bankly','Aplikacja bankowa.','TypeScript','repo'],
+['Magazyn','https://github.com/harryszczupak/Magazyn_projekt','System magazynowy.','C++','repo']];
+$('#pj').innerHTML=P.map(p=>`<a class="card" href="${p[1]}" target="_blank" rel="noopener"><div class="ph"><b>${p[0]}</b><span class="st ${p[4]==='live'?'live':''}">${p[4]==='live'?'● live':'repo'}</span></div><p>${p[2]}</p><div class="tg">${p[3].split(',').map(t=>`<span>${t}</span>`).join('')}</div></a>`).join('');
+const S=[['Frontend','var(--ac)',['HTML5','CSS3','JavaScript','TypeScript','React','Next.js','Tailwind CSS']],
+['Backend','var(--ac2)',['Node.js','Express / EJS','Socket.IO','Stripe API','Python','C++']],
+['Bazy i narzędzia','var(--wr)',['MongoDB','Git / GitHub','Webpack','Parcel']]];
+$('#sk').innerHTML=`<b>Technologie</b>`+S.map(g=>`<div class="grp"><small>${g[0]}</small><div>${g[2].map((t,i)=>`<span class="chip" style="--c:${g[1]};--d:${i*60}ms">${t}</span>`).join('')}</div></div>`).join('');
+// heatmapa (deterministyczne dane demo)
+let seed=7;const r=()=>(seed=seed*16807%2147483647)/2147483647;
+$('#hm').innerHTML=Array.from({length:182},(_,i)=>{const v=r(),l=v<.35?0:v<.6?1:v<.8?2:v<.93?3:4;
+ return `<i style="animation-delay:${i*8}ms;${l?`background:color-mix(in srgb,var(--ac2) ${l*25}%,var(--pn2))`:''}"></i>`}).join('');
+// typing
+const T='Student informatyki i freelancer. Buduję nowoczesne aplikacje webowe w Node.js, TypeScript i Reakcie, a teraz zgłębiam backend i DevOps.';
+let k=0;(function ty(){$('#ty').textContent=T.slice(0,k++);if(k<=T.length)setTimeout(ty,22)})();
+// reveal + liczniki + paski
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const el=e.target;el.classList.add('vis');
+ el.querySelectorAll('[data-n]').forEach(c=>{const n=+c.dataset.n;let i=0;const t=setInterval(()=>{c.textContent=++i;if(i>=n)clearInterval(t)},900/n)});
+ el.querySelectorAll('.br i').forEach(b=>b.style.width=b.dataset.w+'%');io.unobserve(el)}),{threshold:.15});
+$$('.rv').forEach(s=>io.observe(s));
+// podświetlenie kursorem
+$$('.card').forEach(c=>c.addEventListener('pointermove',e=>{const b=c.getBoundingClientRect();c.style.setProperty('--x',e.clientX-b.left+'px');c.style.setProperty('--y',e.clientY-b.top+'px')}));
+// log
+const L=[['in','git pull origin main'],['','npm ci — 312 pakietów'],['','tsc --noEmit'],['ok','✓ typecheck passed'],['','jest — 24 testy'],['ok','✓ all tests passed'],['','next build'],['ok','✓ build ready in 6.2s'],['in','deploy → production'],['ok','✓ live. Status: Open for freelance']];
+let li=0;setInterval(()=>{const l=$('#log'),d=document.createElement('div');const x=L[li++%L.length];d.className=x[0];d.textContent=`[${new Date().toLocaleTimeString('pl-PL')}] ${x[1]}`;l.appendChild(d);while(l.children.length>9)l.firstChild.remove()},1100);
+// scroll-spy
+const secs=$$('main section'),links=$$('nav a');
+addEventListener('scroll',()=>{let c=secs[0].id;secs.forEach(s=>{if(s.getBoundingClientRect().top<innerHeight*.4)c=s.id});links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+c))},{passive:true});
+// motyw
+$('#th').onclick=()=>{const d=document.documentElement,cur=d.dataset.theme||(matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');d.dataset.theme=cur==='dark'?'light':'dark'};
 </script>
 </body>
 </html>
