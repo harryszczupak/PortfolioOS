@@ -29,18 +29,19 @@ canvas{position:fixed;inset:0;display:block}
 #pk{font-size:11px;letter-spacing:.22em;color:var(--c2)}
 #pt{margin:6px 0 4px;font-size:24px;letter-spacing:.06em;color:#fff;text-shadow:0 0 14px var(--c)}
 #ps{font-size:11px;letter-spacing:.16em;color:var(--c);margin-bottom:12px}
-#pd{color:var(--tx);min-height:84px}
+#pd{color:var(--tx);min-height:84px;white-space:pre-line}
 #pc{margin:12px 0}
 #pc span{display:inline-block;font-size:11px;padding:2px 9px;margin:0 5px 5px 0;border:1px solid rgba(56,217,255,.5);color:var(--c);letter-spacing:.06em}
 .ln a{display:inline-block;margin:0 8px 8px 0;padding:8px 14px;color:#021018;background:var(--c);text-decoration:none;font-weight:700;font-size:13px;letter-spacing:.06em;clip-path:polygon(8px 0,100% 0,calc(100% - 8px) 100%,0 100%)}
 .ln a:hover{background:var(--c2)}
 .nv{display:flex;align-items:center;gap:10px;margin-top:8px}.nv i{flex:1;text-align:center;font-style:normal;font-size:11px;letter-spacing:.2em;color:var(--mu)}
 .nv .x{border-color:var(--c2);color:var(--c2)}
+@media(max-height:700px) and (min-width:761px){#panel{max-height:94%;overflow:auto}}
 @media(max-width:760px){#panel{right:12px;left:12px;top:auto;bottom:calc(12px + env(safe-area-inset-bottom,0px));width:auto;max-height:46%;overflow:auto;transform:translateY(40px);padding:16px}#panel.on{transform:none}#pd{min-height:0}#pt{font-size:20px}}
 </style>
 </head>
 <body>
-<div id="top"><b>JAKUB DUDA</b><span>MAPA MISJI · FULLSTACK DEVELOPER</span></div>
+<div id="top"><b>JAKUB DUDA</b><span>MAPA MISJI · JUNIOR SOFTWARE ENGINEER</span></div>
 <div class="zm"><button id="zo">−</button><button id="zi">+</button></div>
 <div id="hint">PRZECIĄGNIJ, ABY OBRÓCIĆ · SCROLL / PINCH = ZOOM · KLIKNIJ ŚWIECĄCY PUNKT MISJI</div>
 <div id="panel"><i class="cn a"></i><i class="cn b"></i><i class="cn c"></i><i class="cn d"></i>
@@ -51,16 +52,14 @@ canvas{position:fixed;inset:0;display:block}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 const M=[
-{n:'O mnie',t:'PROFIL PILOTA',s:'STATUS: DOSTĘPNY',la:12,lo:-15,d:'Jakub Duda — student informatyki na Politechnice Krakowskiej, technik informatyk i freelancer. Buduję nowoczesne aplikacje webowe od pomysłu po wdrożenie.',g:['Computer Science','Freelancer','Fullstack','Kraków'],l:[]},
-{n:'Umiejętności',t:'WYPOSAŻENIE',s:'STATUS: W ROZWOJU',la:38,lo:25,d:'Frontend: HTML, CSS, JavaScript, TypeScript, React, Next.js, Tailwind. Backend: Node.js, Express/EJS, Socket.IO, Stripe, Python, C++. Bazy: MongoDB. Narzędzia: Git, Webpack, Parcel.',g:['TypeScript','React','Next.js','Node.js','MongoDB','Stripe','Python','C++'],l:[]},
-{n:'Infinite Apparel',t:'ZLECENIE KOMERCYJNE',s:'STATUS: LIVE NA PRODUKCJI',la:15,lo:75,d:'Sklep e-commerce od zera: płatności przez Stripe, produkty i użytkownicy w MongoDB, szablony EJS. Działa i jest wdrożony.',g:['Node.js','Stripe','MongoDB','EJS'],l:[['Odwiedź sklep','https://infiniteapparelwear.com']]},
-{n:'Typing Battle',t:'MISJA MULTIPLAYER',s:'STATUS: UKOŃCZONA',la:-15,lo:115,d:'Wieloosobowy wyścig w pisaniu w czasie rzeczywistym. Statystyki na żywo, rundy czasowe i rywalizacja z innymi graczami.',g:['Next.js','Socket.IO','TailwindCSS','TypeScript'],l:[['Zobacz repo','https://github.com/harryszczupak/Typing-Battle']]},
-{n:'AI Task Manager',t:'MISJA AI',s:'STATUS: UKOŃCZONA',la:-38,lo:65,d:'Menedżer zadań wspierany przez sztuczną inteligencję, który pomaga porządkować i planować pracę.',g:['JavaScript','AI'],l:[['Zobacz repo','https://github.com/harryszczupak/ai-task-manager']]},
-{n:'Medical Clinic API',t:'MISJA BACKEND',s:'STATUS: UKOŃCZONA',la:-28,lo:8,d:'Backendowe API dla przychodni medycznej, napisane w Pythonie.',g:['Python','REST API'],l:[['Zobacz repo','https://github.com/harryszczupak/medical-clinic-api']]},
-{n:'Auto Market',t:'MISJA FULLSTACK',s:'STATUS: UKOŃCZONA',la:-8,lo:-42,d:'Aplikacja webowa rynku motoryzacyjnego zbudowana w TypeScript.',g:['TypeScript'],l:[['Zobacz repo','https://github.com/harryszczupak/auto-market']]},
-{n:'Bankly',t:'MISJA FINTECH',s:'STATUS: UKOŃCZONA',la:22,lo:-85,d:'Aplikacja bankowa napisana w TypeScript.',g:['TypeScript'],l:[['Zobacz repo','https://github.com/harryszczupak/bankly']]},
-{n:'Magazyn',t:'MISJA SYSTEMOWA',s:'STATUS: UKOŃCZONA',la:50,lo:-60,d:'Projekt systemu magazynowego w C++.',g:['C++'],l:[['Zobacz repo','https://github.com/harryszczupak/Magazyn_projekt']]},
-{n:'Kontakt',t:'KOMUNIKACJA',s:'STATUS: NASŁUCHUJĘ',la:42,lo:-115,d:'Masz projekt albo pomysł? Odezwij się — chętnie pomogę go zbudować.',g:['Freelance','Fullstack'],l:[['E-mail','mailto:jakubduda449@gmail.com'],['GitHub','https://github.com/harryszczupak'],['LinkedIn','https://www.linkedin.com/in/jakub-duda-9b272b33a/']]}];
+{n:"O mnie",t:"PROFIL PILOTA",s:"STATUS: JUNIOR SOFTWARE ENGINEER",la:12,lo:-15,d:"Jakub Duda — junior software engineer skupiony na frontendzie. Dbam o jakość interfejsu, responsywność i UX.\nStudiuję informatykę w inżynierii komputerowej i elektrycznej na Politechnice Krakowskiej (plan. ukończenie 2029). Wcześniej technik informatyk w ZS nr 1 im. Orkana.",g:["Frontend","Informatyka PK","Technik informatyk","Angielski C1"],l:[]},
+{n:"Doświadczenie",t:"DZIENNIK POKŁADOWY",s:"STATUS: FRONTEND NA CO DZIEŃ, BACKEND W NAUCE",la:38,lo:25,d:"Główny stack: React, TypeScript i Redux. Backend dopiero poznaję — aktualnie uczę się Node.js.\n\n▸ Młodszy Programista — Urząd Gminy Nowy Targ (02–03.2023): zarządzanie treścią strony przez CMS, aktualizacje podstron, galerie, dbałość o poprawność i estetykę treści.\n▸ Serwisant sprzętu — AND Computers (04–05.2024): instalacja systemów, diagnostyka, montaż i modernizacja komputerów.",g:["React","TypeScript","Redux","Node.js (w nauce)"],l:[]},
+{n:"Umiejętności",t:"WYPOSAŻENIE",s:"STATUS: W ROZWOJU",la:15,lo:75,d:"Frontend: React, TypeScript, Redux, Tailwind CSS, JavaScript, HTML5, CSS3.\nBackend (w trakcie nauki): Node.js, MongoDB, MySQL.\nInne: C++, Python, Git, Docker, Jest.",g:["React","TypeScript","Redux","Tailwind","Node.js","C++","Docker","Git"],l:[]},
+{n:"Infinite Apparel",t:"ZLECENIE KOMERCYJNE",s:"STATUS: LIVE NA PRODUKCJI",la:-15,lo:115,d:"Sklep e-commerce od zera: płatności przez Stripe, produkty i użytkownicy w MongoDB, szablony EJS. Działa i jest wdrożony.",g:["Node.js","Stripe","MongoDB","EJS"],l:[["Odwiedź sklep","https://infiniteapparelwear.com"]]},
+{n:"Typing Battle",t:"MISJA MULTIPLAYER",s:"STATUS: UKOŃCZONA",la:-38,lo:65,d:"Wieloosobowy wyścig w pisaniu w czasie rzeczywistym. Statystyki na żywo, rundy czasowe i rywalizacja z innymi graczami.",g:["Next.js","Socket.IO","TailwindCSS","TypeScript"],l:[["Zobacz repo","https://github.com/harryszczupak/Typing-Battle"]]},
+{n:"Bankly",t:"MISJA FULLSTACK",s:"STATUS: UKOŃCZONA",la:-22,lo:10,d:"Aplikacja bankowa: interfejs w TypeScript oraz własne API napisane w Spring Boot. Całość uruchamiana w kontenerach Docker.",g:["TypeScript","Spring Boot","REST API","Docker"],l:[["Zobacz repo","https://github.com/harryszczupak/bankly"]]},
+{n:"Magazyn",t:"MISJA OBIEKTOWA",s:"STATUS: UKOŃCZONA",la:22,lo:-60,d:"System magazynowy w C++ zaprojektowany obiektowo: hierarchie klas, dziedziczenie, polimorfizm i enkapsulacja.",g:["C++","OOP","Polimorfizm","Dziedziczenie"],l:[["Zobacz repo","https://github.com/harryszczupak/Magazyn_projekt"]]},
+{n:"Kontakt",t:"KOMUNIKACJA",s:"STATUS: NASŁUCHUJĘ",la:45,lo:-110,d:"Masz ofertę, projekt albo pomysł? Odezwij się — chętnie porozmawiam.",g:["React","TypeScript"],l:[["E-mail","mailto:jakubduda449@gmail.com"],["GitHub","https://github.com/harryszczupak"],["LinkedIn","https://www.linkedin.com/in/jakub-duda-9b272b33a/"]]}];
 const $=s=>document.querySelector(s),T=THREE;
 const ll=(la,lo)=>{const p=(90-la)*Math.PI/180,t=(lo+180)*Math.PI/180;return new T.Vector3(-Math.sin(p)*Math.cos(t),Math.cos(p),Math.sin(p)*Math.sin(t))};
 // dźwięk (syntezowany)
